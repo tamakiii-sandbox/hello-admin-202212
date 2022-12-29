@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  php:
+    build:
+      context: docker/php
+    working_dir: /var/lib/tamakiii-sandbox/hello-admin-202212
+    volumes:
+      - .:/var/lib/tamakiii-sandbox/hello-admin-202212
+
+  nginx:
+    build:
+      context: docker/nginx
+    volumes:
+      - .:/var/lib/tamakiii-sandbox/hello-admin-202212
+    ports:
+      - 80:80
+      - 443:443
+
+  mysql:
+    build:
+      context: docker/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-password}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-symfony}
+      MYSQL_USER: ${MYSQL_USER:-user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-}
+    volumes:
+      - mysql_data:/var/lib/postgresql/data:rw
+
+volumes:
+  mysql_data:
